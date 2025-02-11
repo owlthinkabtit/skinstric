@@ -13,8 +13,9 @@ code {
 }
 
 @font-face {
-  font-family: "RoobertTRIAL-Regular";
-  src: local("RoobertTRAIL-Regular"),
-   url("./fonts/RoobertTRIAL-Regular-BF67243fd53fdf2.otf") format("opentype");
+  font-family: "RoobertTRIAL-Regular", "RoobertTRIAL-Light";
+  src: local("RoobertTRAIL-Regular"), local("RoobertTRIAL-Light"),
+   url("./fonts/RoobertTRIAL-Regular-BF67243fd53fdf2.otf") format("opentype"),
+   url("./fonts/RoobertTRIAL-Light-BF67243fd502239.otf") format("opentype");
   font-weight: normal;
 }
