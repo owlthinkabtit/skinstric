@@ -10,6 +10,16 @@ function App() {
       <main className="main-content">
         <h1 className="headline">Sophisticated 
           <br></br>skincare</h1>
+          <div className="nav-left">
+            <a href="#" className="nav-link">
+              <button>&larr;</button> DISCOVER A.I.
+            </a>
+          </div>
+          <div className="nav-right">
+            <a href="#" className="nav-link">
+              TAKE TEST<button>&rarr;</button>
+            </a>
+          </div>
       </main>
     </div>
   );
