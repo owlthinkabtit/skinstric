@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import React from 'react'
+import { useParams } from "react-router-dom";
+import React, { useEffect }from 'react'
 import Header from "./Header";
 
 function TakeTest() {

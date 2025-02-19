@@ -105,20 +105,73 @@
   transform: rotate(45deg);
 }
 
-/** TEST PAGE **/
 
-.test {
-  width: 100vw;
-  height: 100vh;
+/* MultiStepForm.css */
+.form-container {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
-  transition: transform 0.8s ease-in-out;
+  height: 100vh;
+  background-color: #fff;
+
 }
 
-.test-title {
-  font-size: 48px;
+.input-page {
+  position: relative;
+  text-align: center;
+  width: 100%;
+  max-width: 586px;
+}
+
+.input-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.input-header {
+  display: flex;
+  position: absolute;
+  height: 200px;
   text-transform: uppercase;
+  color: grey;
+}
+
+.input-wrapper input {
+  width: 100%;
+  max-width: 586px;
+  padding: 10px 0;
+  font-size: 64px;
+  font-weight: 500;
+  text-align: center;
+  color: #000;
+  border: none;
+  outline: none;
+  background: transparent;
+  caret-color: #000;
+}
+
+.input-wrapper::after {
+  content: "";
+  position: absolute;
+  width: 480px;
+  height: 2px;
+  background: black;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+input::placeholder {
+  font-size: 64px;
+  letter-spacing: -1px;
+  font-weight: 500;
+  color: black;
+  text-align: center;
+  transition: opacity 0.3s ease;
+}
+
+input:focus::placeholder {
+  opacity: 0;
 }

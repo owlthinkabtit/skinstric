@@ -6,7 +6,6 @@ import Header from './Header';
 function Home() {
   return (
     <div className="App">
-    <Header />
      <main className="main-content">
        <h1 className="headline">Sophisticated 
          <br></br>skincare</h1>
