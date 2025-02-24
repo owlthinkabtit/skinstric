@@ -1,73 +1,81 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import '../App.css';
 
 const MultiStepForm = () => {
   const [step, setStep] = useState(1);
-  const [name, setName] = useState("");
-  const [location, setLocation] = useState("");
+  const [name, setName] = useState(localStorage.getItem("userName") || "");
+  const [location, setLocation] = useState(localStorage.getItem("userLocation") || "");
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const isValidInput = (text) => /^[A-Za-z\s]+$/.test(text.trim());
 
   const handleNextStep = () => {
-    if (step === 1 && isValidInput(name)) {
+    setError("");
+
+    if (step === 1) {
+      if (!isValidInput(name)) {
+        setError("Please enter a valid name (letters only).");
+        return;
+      }
+      localStorage.setItem("userName", name); // Store in local storage
       setStep(2);
-      localStorage.setItem("userName", name);
-    } else if (step === 2 && isValidInput(location)) {
+    } else if (step === 2) {
+      if (!isValidInput(location)) {
+        setError("Please enter a valid location (letters only).");
+        return;
+      }
+      localStorage.setItem("userLocation", location); // Store in local storage
       handleSubmit();
-    } else {
-      alert("Please enter a valid input (letters only).");
     }
   };
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    const userData = { Name: name, Location: location };
+    setError("");
 
     try {
       const response = await fetch(
-        "https://wk7wmfz7x8.execute-api.us-east-2.amazonaws.com/live/FES_Virtual_Internship_1/level1",
+        "https://us-central1-api-skinstric-ai.cloudfunctions.net/skinstricPhaseOne",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ Name: "John Doe", Location: "New York" }),
+          body: JSON.stringify({ name, location }),
         }
       );
 
       const data = await response.json();
-      alert(data.SUCCESS);
-      localStorage.setItem("userLocation", location);
+      console.log("API Response:", data);
+
+      // Move to the next page after successful API call
+      navigate("/upload-photo");
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("Submission failed. Please try again.");
+      setError("Submission failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter" && !isLoading) {
-      handleNextStep();
-    }
-  };
-
   return (
     <div className="form-container">
-      <div className="input-page">
-        <div className="input-wrapper">
-          <h4 className="input-header">Click to Type</h4>
-          <input
-            type="text"
-            value={step === 1 ? name : location}
-            onChange={(e) =>
-              step === 1 ? setName(e.target.value) : setLocation(e.target.value)
-            }
-            onKeyDown={handleKeyPress}
-            placeholder={
-              step === 1 ? "Introduce Yourself" : "Where are you from?"
-            }
-            disabled={isLoading}
-          />
-        </div>
+      <h2>{step === 1 ? "Enter Your Name" : "Enter Your Location"}</h2>
+      <input
+        type="text"
+        value={step === 1 ? name : location}
+        onChange={(e) => (step === 1 ? setName(e.target.value) : setLocation(e.target.value))}
+        placeholder={step === 1 ? "Introduce Yourself" : "Where are you from?"}
+        disabled={isLoading}
+      />
+      {error && <p className="error-message">{error}</p>}
+
+      <div className="button-group">
+        {step === 2 && <button onClick={() => setStep(1)}>Back</button>}
+        <button onClick={handleNextStep} disabled={isLoading}>
+          {step === 1 ? "Next" : "Submit"}
+        </button>
       </div>
     </div>
   );
