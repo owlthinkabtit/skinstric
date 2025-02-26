@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../App.css";
 
 const UploadImage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [base64Image, setBase64Image] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
   const handleImageUpload = (event) => {
@@ -13,8 +13,8 @@ const UploadImage = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setBase64Image(reader.result.split(",")[1]); // Extract only Base64 data
-        setSelectedImage(URL.createObjectURL(file)); // Show preview
+        setBase64Image(reader.result.split(",")[1]);
+        setSelectedImage(URL.createObjectURL(file));
       };
       reader.readAsDataURL(file);
     }
@@ -37,8 +37,8 @@ const UploadImage = () => {
         }
       );
 
-      const data = await response.json();
-      setSuccessMessage(data.message);
+      await response.json();
+      alert("Upload successful!");
     } catch (error) {
       console.error("Error uploading image:", error);
       alert("Upload failed. Please try again.");
@@ -48,14 +48,15 @@ const UploadImage = () => {
   };
 
   return (
-    <div className="upload-container">
-      <h2>Upload Your Image</h2>
-      <input type="file" accept="image/*" onChange={handleImageUpload} disabled={isLoading} />
+    <div className="upload-page">
+      <h2>UPLOAD YOUR IMAGE</h2>
+      <div className="diamond">
+        <input type="file" accept="image/*" onChange={handleImageUpload} disabled={isLoading} />
+      </div>
       {selectedImage && <img src={selectedImage} alt="Preview" className="image-preview" />}
       <button onClick={handleSubmit} disabled={isLoading}>
         {isLoading ? "Uploading..." : "Submit"}
       </button>
-      {successMessage && <p className="success-message">{successMessage}</p>}
       <button onClick={() => navigate("/upload-photo")}>Back</button>
     </div>
   );

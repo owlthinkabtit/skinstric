@@ -131,18 +131,33 @@
 }
 
 .input-header {
-  display: flex;
+  display: block;
   position: absolute;
-  height: 200px;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
   text-transform: uppercase;
   color: grey;
 }
 
-.input-wrapper input {
-  width: 100%;
-  max-width: 586px;
+/* Diamond Shape */
+.diamond {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: rotate(45deg);
+  border: 2px dotted #a0a4ab;
+}
+
+input {
+  width: 90%;
+  max-width: 350px;
   padding: 10px 0;
-  font-size: 64px;
+  font-size: 48px;
   font-weight: 500;
   text-align: center;
   color: #000;
@@ -150,22 +165,14 @@
   outline: none;
   background: transparent;
   caret-color: #000;
-}
-
-.input-wrapper::after {
-  content: "";
-  position: absolute;
-  width: 480px;
-  height: 2px;
-  background: black;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
+  transform: rotate(0deg);
+  line-height: 1.2;
+  overflow: hidden;
+  word-break: break-word;
 }
 
 input::placeholder {
-  font-size: 64px;
-  letter-spacing: -1px;
+  font-size: 48px;
   font-weight: 500;
   color: black;
   text-align: center;
@@ -176,3 +183,74 @@ input:focus::placeholder {
   opacity: 0;
 }
 
+/* Error Message */
+.error-message {
+  margin-top: 10px;
+  font-size: 14px;
+  color: red;
+}
+
+/* Upload & Webcam photo portion */
+.upload-photo-container {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.upload-heading {
+  font-size: 24px;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+
+.options-wrapper {
+  display: flex;
+  gap: 100px;
+  justify-content: center;
+  align-items: center;
+}
+
+.diamond {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: rotate(45deg);
+  border: 2px dotted #a0a4ab;
+  cursor: pointer;
+}
+
+.diamond:hover {
+  border-color: black;
+}
+
+.upload-icon {
+  transform: rotate(-45deg);
+  font-size: 60px;
+}
+
+.upload-label {
+  margin-top: 10px;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.back-button {
+  position: absolute;
+  bottom: 50px;
+  left: 50px;
+  font-size: 14px;
+  text-transform: uppercase;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  text-decoration: underline;
+}

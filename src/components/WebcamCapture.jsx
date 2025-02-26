@@ -1,20 +1,20 @@
 import React, { useRef, useState } from "react";
 import Webcam from "react-webcam";
 import { useNavigate } from "react-router-dom";
+import "../App.css";
 
 const WebcamCapture = () => {
   const webcamRef = useRef(null);
   const [capturedImage, setCapturedImage] = useState(null);
   const [base64Image, setBase64Image] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
   const capturePhoto = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     if (imageSrc) {
       setCapturedImage(imageSrc);
-      setBase64Image(imageSrc.split(",")[1]); // Extract only Base64 data
+      setBase64Image(imageSrc.split(",")[1]);
     }
   };
 
@@ -35,8 +35,8 @@ const WebcamCapture = () => {
         }
       );
 
-      const data = await response.json();
-      setSuccessMessage(data.message);
+      await response.json();
+      alert("Photo uploaded successfully!");
     } catch (error) {
       console.error("Error uploading image:", error);
       alert("Upload failed. Please try again.");
@@ -47,14 +47,15 @@ const WebcamCapture = () => {
 
   return (
     <div className="webcam-container">
-      <h2>Take a Selfie</h2>
-      <Webcam ref={webcamRef} screenshotFormat="image/jpeg" />
+      <h2>TAKE A SELFIE</h2>
+      <div className="diamond">
+        <Webcam ref={webcamRef} screenshotFormat="image/jpeg" />
+      </div>
       <button onClick={capturePhoto}>Capture Photo</button>
       {capturedImage && <img src={capturedImage} alt="Captured" className="image-preview" />}
       <button onClick={handleSubmit} disabled={isLoading}>
         {isLoading ? "Uploading..." : "Submit"}
       </button>
-      {successMessage && <p className="success-message">{successMessage}</p>}
       <button onClick={() => navigate("/upload-photo")}>Back</button>
     </div>
   );

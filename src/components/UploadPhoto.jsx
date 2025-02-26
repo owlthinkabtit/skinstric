@@ -1,5 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { MdOutlineCamera } from "react-icons/md";
+import { BsImage } from "react-icons/bs";
+import "../App.css";
 
 const UploadPhoto = () => {
   const navigate = useNavigate();
@@ -7,29 +10,28 @@ const UploadPhoto = () => {
   const location = localStorage.getItem("userLocation") || "Unknown Location";
 
   return (
-    <div className="upload-page">
-      <h2>TO START ANALYSIS</h2>
-      <p>Welcome, {name} from {location}!</p>
+    <div className="upload-photo-container">
+      <h2 className="upload-heading">TO START ANALYSIS</h2>
 
-      <div className="options-container">
-        {/* Take a Photo */}
-        <div className="option" onClick={() => navigate("/take-photo")}>
+      <div className="options-wrapper">
+        <div className="upload-option" onClick={() => navigate("/take-photo")}>
           <div className="diamond">
-            <img src="/camera-icon.svg" alt="Take Photo" />
+            <MdOutlineCamera className="upload-icon" />
           </div>
-          <p>ALLOW A.I. TO SCAN YOUR FACE</p>
+          <p className="upload-label">ALLOW A.I. TO SCAN YOUR FACE</p>
         </div>
 
-        {/* Upload an Image */}
-        <div className="option" onClick={() => navigate("/upload-gallery")}>
+      
+        <div className="upload-option" onClick={() => navigate("/upload-gallery")}>
           <div className="diamond">
-            <img src="/gallery-icon.svg" alt="Upload Photo" />
+            <BsImage className="upload-icon" />
           </div>
-          <p>ALLOW A.I. TO ACCESS GALLERY</p>
+          <p className="upload-label">ALLOW A.I. TO ACCESS GALLERY</p>
         </div>
       </div>
 
-      <button className="back-button" onClick={() => navigate(-1)}>Back</button>
+      
+      <button className="back-button" onClick={() => navigate(-1)}>BACK</button>
     </div>
   );
 };
