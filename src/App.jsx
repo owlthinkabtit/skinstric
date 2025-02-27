@@ -6,6 +6,9 @@ import Header from "./components/Header";
 import UploadPhoto from "./components/UploadPhoto";
 import UploadImage from "./components/UploadImage";
 import WebcamCapture from "./components/WebcamCapture";
+import LoadingScreen from "./components/LoadingScreen"; // New
+import AnalysisPage from "./components/AnalysisPage"; // New
+import Demographics from "./components/Demographics"; // New
 
 function App() {
   return (
@@ -17,6 +20,9 @@ function App() {
         <Route path="/upload-photo" element={<UploadPhoto />} />
         <Route path="/upload-gallery" element={<UploadImage />} />
         <Route path="/take-photo" element={<WebcamCapture />} />
+        <Route path="/loading" element={<LoadingScreen />} /> 
+        <Route path="/analysis" element={<AnalysisPage />} /> 
+        <Route path="/demographics" element={<Demographics />} />
       </Routes>
     </Router>
   );

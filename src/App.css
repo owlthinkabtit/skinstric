@@ -190,7 +190,7 @@ input:focus::placeholder {
   color: red;
 }
 
-/* Upload & Webcam photo portion */
+/* Upload Photo*/
 .upload-photo-container {
   text-align: center;
   display: flex;
@@ -253,4 +253,78 @@ input:focus::placeholder {
 
 .back-button:hover {
   text-decoration: underline;
+}
+
+.upload-container {
+  text-align: center;
+  padding: 20px;
+}
+
+.image-preview {
+  width: 200px;
+  height: auto;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 2px solid #ddd;
+}
+
+.result-container {
+  margin-top: 20px;
+}
+
+.result-container h3 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.result-container ul {
+  list-style: none;
+  padding: 0;
+}
+
+.result-container li {
+  font-size: 16px;
+  margin: 5px 0;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Loading state */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+
+.rotating-diamond {
+  width: 250px;
+  height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px dotted #a0a4ab;
+  transform: rotate(45deg);
+  animation: rotateAnimation 3s linear infinite;
+}
+
+.rotating-diamond p {
+  transform: rotate(-45deg);
+  font-size: 16px;
+  font-weight: bold;
+}
+
+@keyframes rotateAnimation {
+  from {
+    transform: rotate(45deg);
+  }
+  to {
+    transform: rotate(405deg);
+  }
 }

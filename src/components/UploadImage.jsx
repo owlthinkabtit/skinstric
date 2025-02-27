@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../App.css";
 
 const UploadImage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -25,7 +24,7 @@ const UploadImage = () => {
       alert("Please upload an image.");
       return;
     }
-
+  
     setIsLoading(true);
     try {
       const response = await fetch(
@@ -36,9 +35,27 @@ const UploadImage = () => {
           body: JSON.stringify({ Image: base64Image }),
         }
       );
+  
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("API Error:", errorText);
+        alert(`API Error: ${errorText}`);
+        return;
+      }
+  
+      const data = await response.json();
+      console.log("API Response:", data);
+  
 
-      await response.json();
-      alert("Upload successful!");
+      if (!data || !data.data) {
+        console.error("Invalid API response:", data);
+        alert("Invalid response from AI. Please try again.");
+        return;
+      }
+  
+      localStorage.setItem("aiResults", JSON.stringify(data.data));
+      navigate("/loading");
     } catch (error) {
       console.error("Error uploading image:", error);
       alert("Upload failed. Please try again.");
@@ -46,13 +63,12 @@ const UploadImage = () => {
       setIsLoading(false);
     }
   };
+  
 
   return (
-    <div className="upload-page">
+    <div className="upload-container">
       <h2>UPLOAD YOUR IMAGE</h2>
-      <div className="diamond">
-        <input type="file" accept="image/*" onChange={handleImageUpload} disabled={isLoading} />
-      </div>
+      <input type="file" accept="image/*" onChange={handleImageUpload} disabled={isLoading} />
       {selectedImage && <img src={selectedImage} alt="Preview" className="image-preview" />}
       <button onClick={handleSubmit} disabled={isLoading}>
         {isLoading ? "Uploading..." : "Submit"}
