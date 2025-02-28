@@ -12,12 +12,16 @@ const UploadImage = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setBase64Image(reader.result.split(",")[1]);
+        const base64String = reader.result.split(",")[1]; 
+        console.log("Base64 Encoded Image:", base64String); 
+        setBase64Image(base64String);
         setSelectedImage(URL.createObjectURL(file));
       };
       reader.readAsDataURL(file);
     }
   };
+  
+  
 
   const handleSubmit = async () => {
     if (!base64Image) {
@@ -27,27 +31,22 @@ const UploadImage = () => {
   
     setIsLoading(true);
     try {
+      // Add MIME type (assuming JPEG)
+      const requestData = { Image: `data:image/jpeg;base64,${base64Image}` };
+      console.log("Sending to API:", requestData); // Debugging
+  
       const response = await fetch(
         "https://us-central1-api-skinstric-ai.cloudfunctions.net/skinstricPhaseTwo",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ Image: base64Image }),
+          body: JSON.stringify(requestData),
         }
       );
   
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("API Error:", errorText);
-        alert(`API Error: ${errorText}`);
-        return;
-      }
-  
       const data = await response.json();
-      console.log("API Response:", data);
+      console.log("API Response:", data); // Debugging
   
-
       if (!data || !data.data) {
         console.error("Invalid API response:", data);
         alert("Invalid response from AI. Please try again.");
@@ -63,6 +62,9 @@ const UploadImage = () => {
       setIsLoading(false);
     }
   };
+  
+  
+  
   
 
   return (
