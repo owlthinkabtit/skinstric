@@ -12,8 +12,14 @@ const UploadImage = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        console.log("Base64 Encoded Image:", reader.result); 
-        setBase64Image(reader.result); // Store the whole base64 string
+        const base64String = reader.result.split(",")[1]; // Extract Base64 data
+        console.log(
+          "Base64 Image String:",
+          base64String
+            ? base64String.substring(0, 100) + "..."
+            : "ERROR - No Data"
+        ); // Log first 100 chars
+        setBase64Image(base64String);
         setSelectedImage(URL.createObjectURL(file));
       };
       reader.readAsDataURL(file);
@@ -28,7 +34,8 @@ const UploadImage = () => {
 
     setIsLoading(true);
     try {
-      const requestData = { Image: base64Image }; // Use the full base64 string
+      const requestData = { image: `data:image/jpeg;base64,${base64Image}` }; // Lowercase "image"
+
       console.log("Sending to API:", requestData);
 
       const response = await fetch(
@@ -62,8 +69,15 @@ const UploadImage = () => {
   return (
     <div className="upload-container">
       <h2>UPLOAD YOUR IMAGE</h2>
-      <input type="file" accept="image/*" onChange={handleImageUpload} disabled={isLoading} />
-      {selectedImage && <img src={selectedImage} alt="Preview" className="image-preview" />}
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleImageUpload}
+        disabled={isLoading}
+      />
+      {selectedImage && (
+        <img src={selectedImage} alt="Preview" className="image-preview" />
+      )}
       <button onClick={handleSubmit} disabled={isLoading}>
         {isLoading ? "Uploading..." : "Submit"}
       </button>

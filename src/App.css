@@ -295,31 +295,62 @@ button {
 }
 
 /* Loading state */
+/* Center the loading screen */
 .loading-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   text-align: center;
+  position: relative;
 }
 
-.rotating-diamond {
-  width: 250px;
-  height: 250px;
+/* Wrapper to position the diamonds */
+.loading-wrapper {
+  position: relative;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+}
+
+/* Base diamond */
+.diamond {
+  position: absolute;
+  width: 200px;
+  height: 200px;
   border: 2px dotted #a0a4ab;
   transform: rotate(45deg);
-  animation: rotateAnimation 3s linear infinite;
 }
 
-.rotating-diamond p {
-  transform: rotate(-45deg);
-  font-size: 16px;
+/* Rotating animation for the diamonds */
+.rotating.fast {
+  animation: rotateAnimation 1.5s linear infinite;
+}
+
+.rotating.medium {
+  width: 220px;
+  height: 220px;
+  opacity: 0.6;
+  animation: rotateAnimation 2.5s linear infinite;
+}
+
+.rotating.slow {
+  width: 240px;
+  height: 240px;
+  opacity: 0.3;
+  animation: rotateAnimation 3.5s linear infinite;
+}
+
+/* Keep text upright */
+.loading-text {
+  position: relative;
+  font-size: 18px;
   font-weight: bold;
+  margin-top: 200px;
+  transform: rotate(0deg); /* Prevent rotation */
 }
 
+/* Keyframes for rotation */
 @keyframes rotateAnimation {
   from {
     transform: rotate(45deg);

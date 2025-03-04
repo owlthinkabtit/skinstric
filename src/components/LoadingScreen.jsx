@@ -1,22 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../App.css";
 
 const LoadingScreen = () => {
   const navigate = useNavigate();
-  const [loadingComplete, setLoadingComplete] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
-      setLoadingComplete(true);
       navigate("/analysis");
     }, 5000);
   }, [navigate]);
 
   return (
     <div className="loading-container">
-      <div className="rotating-diamond">
-        <p>PREPARING YOUR ANALYSIS ...</p>
+      <div className="loading-wrapper">
+        <div className="diamond rotating fast"></div>
+        <div className="diamond rotating medium"></div>
+        <div className="diamond rotating slow"></div>
+        <p className="loading-text">PREPARING YOUR ANALYSIS ...</p>
       </div>
     </div>
   );
