@@ -8,18 +8,33 @@ const AnalysisPage = () => {
   return (
     <div className="analysis-container">
       <h2 className="analysis-title">A.I. ANALYSIS</h2>
-      <p className="analysis-subtext">A.I. has estimated the following. Fix estimated information if needed.</p>
+      <p className="analysis-subtext">
+        A.I. has estimated the following. Fix estimated information if needed.
+      </p>
 
-      <div className="diamond-grid">
-        <div className="diamond clickable highlight" onClick={() => navigate("/demographics")}>
-          <p>DEMOGRAPHICS</p>
+      <div className="diamond-wrapper">
+        <div className="main-diamond">
+          <div
+            className="small-diamond clickable highlight"
+            onClick={() => navigate("/demographics")}
+          >
+            <p>DEMOGRAPHICS</p>
+          </div>
+          <div className="small-diamond inactive">
+            <p>SKIN TYPE DETAILS</p>
+          </div>
+          <div className="small-diamond inactive">
+            <p>COSMETIC CONCERNS</p>
+          </div>
+          <div className="small-diamond inactive">
+            <p>WEATHER</p>
+          </div>
         </div>
-        <div className="diamond inactive"><p>SKIN TYPE DETAILS</p></div>
-        <div className="diamond inactive"><p>COSMETIC CONCERNS</p></div>
-        <div className="diamond inactive"><p>WEATHER</p></div>
       </div>
 
-      <button className="back-button" onClick={() => navigate(-1)}>BACK</button>
+      <button className="back-button" onClick={() => navigate(-1)}>
+        BACK
+      </button>
     </div>
   );
 };
