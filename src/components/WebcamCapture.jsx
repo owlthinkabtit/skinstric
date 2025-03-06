@@ -1,62 +1,75 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Webcam from "react-webcam";
 import { useNavigate } from "react-router-dom";
-import "../App.css";
+import "../WebcamCapture.css";
+import { TbCapture } from "react-icons/tb";
 
 const WebcamCapture = () => {
   const webcamRef = useRef(null);
-  const [capturedImage, setCapturedImage] = useState(null);
-  const [base64Image, setBase64Image] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [showPermissionPopup, setShowPermissionPopup] = useState(true);
+
+ 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 2000); 
+
+    return () => clearTimeout(timeout);
+  }, []);
 
   const capturePhoto = () => {
-    const imageSrc = webcamRef.current.getScreenshot();
-    if (imageSrc) {
-      setCapturedImage(imageSrc);
-      setBase64Image(imageSrc.split(",")[1]);
+    if (webcamRef.current) {
+      const imageSrc = webcamRef.current.getScreenshot();
+      setImage(imageSrc);
+
+      
+      localStorage.setItem("capturedImage", imageSrc);
+      navigate("/analysis");
     }
   };
 
-  const handleSubmit = async () => {
-    if (!base64Image) {
-      alert("Please take a photo.");
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const response = await fetch(
-        "https://us-central1-api-skinstric-ai.cloudfunctions.net/skinstricPhaseTwo",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ Image: base64Image }),
-        }
-      );
-
-      await response.json();
-      alert("Photo uploaded successfully!");
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      alert("Upload failed. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
+  const handleAllowCamera = () => {
+    setShowPermissionPopup(false);
   };
 
   return (
     <div className="webcam-container">
-      <h2>TAKE A SELFIE</h2>
-      <div className="diamond">
-        <Webcam ref={webcamRef} screenshotFormat="image/jpeg" />
-      </div>
-      <button onClick={capturePhoto}>Capture Photo</button>
-      {capturedImage && <img src={capturedImage} alt="Captured" className="image-preview" />}
-      <button onClick={handleSubmit} disabled={isLoading}>
-        {isLoading ? "Uploading..." : "Submit"}
-      </button>
-      <button onClick={() => navigate("/upload-photo")}>Back</button>
+      {showPermissionPopup ? (
+        <div className="popup">
+          <p>ALLOW A.I. TO ACCESS YOUR CAMERA</p>
+          <button onClick={() => setShowPermissionPopup(false)}>Deny</button>
+          <button onClick={handleAllowCamera}>Allow</button>
+        </div>
+      ) : loading ? (
+        <div className="loading-screen">
+          <div className="rotating-diamond"></div>
+          <p>SETTING UP CAMERA...</p>
+          <p className="tips">Make sure to have:</p>
+          <ul>
+            <li>○ Neutral Expression</li>
+            <li>○ Frontal Pose</li>
+            <li>○ Adequate Lighting</li>
+          </ul>
+        </div>
+      ) : !image ? (
+        <>
+          <Webcam
+            ref={webcamRef}
+            className="webcam-feed"
+            screenshotFormat="image/jpeg"
+            videoConstraints={{ facingMode: "user" }}
+          />
+          <div className="blur-overlay"></div> 
+          <button className="capture-button" onClick={capturePhoto}>
+            <TbCapture />
+          </button>
+        </>
+      ) : (
+        <img src={image} alt="Captured" className="webcam-feed" />
+      )}
     </div>
   );
 };
