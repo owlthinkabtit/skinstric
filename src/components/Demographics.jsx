@@ -1,30 +1,42 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../App.css";
+import "../Demographics.css";
 
 const Demographics = () => {
   const navigate = useNavigate();
-  const [results, setResults] = useState(null);
+  const [results, setResults] = useState({
+    race: {},
+    age: {},
+    gender: {},
+  });
+
+  const [selectedCategory, setSelectedCategory] = useState("race");
+  const [selectedValue, setSelectedValue] = useState(null);
 
   useEffect(() => {
     try {
       const storedResults = localStorage.getItem("aiResults");
       if (storedResults) {
         const parsedResults = JSON.parse(storedResults);
+        setResults(parsedResults);
 
-        if (
-          parsedResults &&
-          parsedResults.race &&
-          parsedResults.age &&
-          parsedResults.gender
-        ) {
-          setResults(parsedResults);
-        } else {
-          console.warn(
-            "AI response is missing expected fields:",
-            parsedResults
-          );
-        }
+        setSelectedValue({
+          race: parsedResults.race
+            ? Object.keys(parsedResults.race).reduce((a, b) =>
+                parsedResults.race[a] > parsedResults.race[b] ? a : b
+              )
+            : "Not available",
+          age: parsedResults.age
+            ? Object.keys(parsedResults.age).reduce((a, b) =>
+                parsedResults.age[a] > parsedResults.age[b] ? a : b
+              )
+            : "Not available",
+          gender: parsedResults.gender
+            ? parsedResults.gender.female > parsedResults.gender.male
+              ? "Female"
+              : "Male"
+            : "Not available",
+        });
       } else {
         console.warn("No AI results found in localStorage.");
       }
@@ -33,31 +45,8 @@ const Demographics = () => {
     }
   }, []);
 
-
-  const calculatePercentages = (data, type) => {
-    if (!data || Object.keys(data).length === 0) return "0"; 
-
-    switch (type) {
-      case "age":
-        const ageTop = Object.keys(data).reduce(
-          (a, b) => (data[a] > data[b] ? a : b),
-          "N/A"
-        );
-        return `${ageTop} (${(data[ageTop] * 100).toFixed(2)}%)`;
-      case "gender":
-        if (!data.female && !data.male) return "N/A (0%)";
-        return data.female > data.male
-          ? `Female (${(data.female * 100).toFixed(2)}%)`
-          : `Male (${(data.male * 100).toFixed(2)}%)`;
-      case "race":
-        const raceTop = Object.keys(data).reduce(
-          (a, b) => (data[a] > data[b] ? a : b),
-          "N/A"
-        );
-        return `${raceTop} (${(data[raceTop] * 100).toFixed(2)}%)`;
-      default:
-        return "N/A (0%)";
-    }
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
   };
 
   return (
@@ -65,18 +54,74 @@ const Demographics = () => {
       <h2 className="demographics-title">DEMOGRAPHICS</h2>
 
       {results ? (
-        <div className="demographics-details">
-          <div className="result-category">
-            <h3>Race</h3>
-            <p>{calculatePercentages(results.race, "race")}</p>
+        <div className="demographics-content">
+          <div className="sidebar">
+            <button
+              className={selectedCategory === "race" ? "active" : ""}
+              onClick={() => handleCategoryClick("race")}
+            >
+              RACE
+            </button>
+            <button
+              className={selectedCategory === "age" ? "active" : ""}
+              onClick={() => handleCategoryClick("age")}
+            >
+              AGE
+            </button>
+            <button
+              className={selectedCategory === "gender" ? "active" : ""}
+              onClick={() => handleCategoryClick("gender")}
+            >
+              GENDER
+            </button>
           </div>
-          <div className="result-category">
-            <h3>Age</h3>
-            <p>{calculatePercentages(results.age, "age")}</p>
-          </div>
-          <div className="result-category">
-            <h3>Gender</h3>
-            <p>{calculatePercentages(results.gender, "gender")}</p>
+
+          <div className="results-display">
+            {selectedCategory === "race" && (
+              <>
+                <h3>{selectedValue?.race || "Not available"}</h3>
+                <p className="percentage">
+                  {results?.race?.[selectedValue?.race]
+                    ? (results.race[selectedValue.race] * 100).toFixed(2)
+                    : "0"}
+                  %
+                </p>
+
+                <div className="circle-chart"></div>
+              </>
+            )}
+            {selectedCategory === "age" && (
+              <>
+                <h3>
+                  {selectedValue?.age
+                    ? `${selectedValue.age} y.o.`
+                    : "Not available"}
+                </h3>
+                <p className="percentage">
+                  {results?.age?.[selectedValue?.age]
+                    ? (results.age[selectedValue.age] * 100).toFixed(2)
+                    : "0"}
+                  %
+                </p>
+
+                <div className="circle-chart"></div>
+              </>
+            )}
+            {selectedCategory === "gender" && (
+              <>
+                <h3>{selectedValue?.gender || "Not available"}</h3>
+                <p className="percentage">
+                  {results?.gender?.female && results?.gender?.male
+                    ? selectedValue.gender === "Female"
+                      ? (results.gender.female * 100).toFixed(2)
+                      : (results.gender.male * 100).toFixed(2)
+                    : "0"}
+                  %
+                </p>
+
+                <div className="circle-chart"></div>
+              </>
+            )}
           </div>
         </div>
       ) : (
