@@ -5,7 +5,7 @@ import "../App.css";
 function Header() {
   return (
     <header className="header">
-      <div className="logo">skinstric</div>
+      <div className="logo"><a href="/">skinstric</a></div>
       <button className="code-btn">enter code</button>
     </header>
   );
