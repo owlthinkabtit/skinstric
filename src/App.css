@@ -245,6 +245,14 @@ input:focus::placeholder {
   text-transform: uppercase;
 }
 
+.upload-label span {
+  font-size: 14px; 
+  font-weight: bold;
+  text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+}
+
 .back-button {
   position: absolute;
   bottom: 50px;

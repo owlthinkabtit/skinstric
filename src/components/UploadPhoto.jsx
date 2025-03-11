@@ -18,7 +18,7 @@ const UploadPhoto = () => {
           <div className="diamond">
             <MdOutlineCamera className="upload-icon" />
           </div>
-          <p className="upload-label">ALLOW A.I. TO SCAN YOUR FACE</p>
+          <span><p className="upload-label">ALLOW A.I. TO SCAN YOUR FACE</p></span>
         </div>
 
       
@@ -26,7 +26,7 @@ const UploadPhoto = () => {
           <div className="diamond">
             <BsImage className="upload-icon" />
           </div>
-          <p className="upload-label">ALLOW A.I. TO ACCESS GALLERY</p>
+          <span><p className="upload-label">ALLOW A.I. TO ACCESS GALLERY</p></span>
         </div>
       </div>
 
