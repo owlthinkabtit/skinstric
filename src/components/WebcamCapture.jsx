@@ -11,11 +11,10 @@ const WebcamCapture = () => {
   const [loading, setLoading] = useState(true);
   const [showPermissionPopup, setShowPermissionPopup] = useState(true);
 
- 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setLoading(false);
-    }, 2000); 
+    }, 2000);
 
     return () => clearTimeout(timeout);
   }, []);
@@ -23,13 +22,44 @@ const WebcamCapture = () => {
   const capturePhoto = () => {
     if (webcamRef.current) {
       const imageSrc = webcamRef.current.getScreenshot();
-      setImage(imageSrc);
 
-      
+      localStorage.removeItem("aiResults");
+
       localStorage.setItem("capturedImage", imageSrc);
-      navigate("/analysis");
+
+      sendToAPI(imageSrc);
     }
   };
+
+  const sendToAPI = async (imageSrc) => {
+    try {
+      const response = await fetch(
+        "https://us-central1-api-skinstric-ai.cloudfunctions.net/skinstricPhaseTwo",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ image: imageSrc }),
+        }
+      );
+  
+      const data = await response.json();
+      
+      if (data && data.success && data.data) {
+        localStorage.setItem("aiResults", JSON.stringify(data.data));
+        console.log("✅ AI Results successfully stored:", data.data);
+        navigate("/analysis");
+      } else {
+        console.error("❌ AI processing failed:", data.message || "Unknown error");
+        alert("AI processing failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("❌ Error sending image:", error);
+      alert("There was an error processing your image. Please try again.");
+    }
+  };
+  
 
   const handleAllowCamera = () => {
     setShowPermissionPopup(false);
@@ -62,7 +92,7 @@ const WebcamCapture = () => {
             screenshotFormat="image/jpeg"
             videoConstraints={{ facingMode: "user" }}
           />
-          <div className="blur-overlay"></div> 
+          <div className="blur-overlay"></div>
           <button className="capture-button" onClick={capturePhoto}>
             <TbCapture />
           </button>

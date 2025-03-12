@@ -1,13 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../App.css";
 
 const MultiStepForm = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userLocation");
+  }, []);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    location:"",
+  });
   const [step, setStep] = useState(1);
   const [name, setName] = useState(localStorage.getItem("userName") || "");
-  const [location, setLocation] = useState(localStorage.getItem("userLocation") || "");
+  const [location, setLocation] = useState(
+    localStorage.getItem("userLocation") || ""
+  );
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   const isValidInput = (text) => /^[A-Za-z\s]+$/.test(text.trim());
 
@@ -64,9 +75,13 @@ const MultiStepForm = () => {
           <input
             type="text"
             value={step === 1 ? name : location}
-            onChange={(e) => (step === 1 ? setName(e.target.value) : setLocation(e.target.value))}
+            onChange={(e) =>
+              step === 1 ? setName(e.target.value) : setLocation(e.target.value)
+            }
             onKeyDown={handleKeyPress}
-            placeholder={step === 1 ? "Introduce Yourself" : "Where are you from?"}
+            placeholder={
+              step === 1 ? "Introduce Yourself" : "Where are you from?"
+            }
             autoFocus
           />
         </div>

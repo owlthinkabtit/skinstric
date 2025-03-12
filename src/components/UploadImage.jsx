@@ -42,7 +42,42 @@ const UploadImage = () => {
       alert("Please upload an image before proceeding.");
       return;
     }
-    navigate("/analysis");
+
+    localStorage.removeItem("aiResults");
+
+    sendToAPI(selectedImage);
+  };
+
+  const sendToAPI = async (imageSrc) => {
+    try {
+      const response = await fetch(
+        "https://us-central1-api-skinstric-ai.cloudfunctions.net/skinstricPhaseTwo",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ image: imageSrc }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data && data.success && data.data) {
+        localStorage.setItem("aiResults", JSON.stringify(data.data));
+        console.log("✅ AI Results successfully stored:", data.data);
+        navigate("/analysis");
+      } else {
+        console.error(
+          "❌ AI processing failed:",
+          data.message || "Unknown error"
+        );
+        alert("AI processing failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("❌ Error sending image:", error);
+      alert("There was an error processing your image. Please try again.");
+    }
   };
 
   return (
